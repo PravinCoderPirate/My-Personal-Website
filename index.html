@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfoShots+</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100" x-data="data()">
+    <div class="container min-h-screen bg-gray-800 mx-auto p-4">
+        <!--Top Bar-->
+        <div class="flex justify-between items-baseline">
+            <h1 class="text-2xl font-semibold">InfoShots++</h1>
+            <div class=""><span class="text-sm">Showing Results for</span> <span x-text="query" class="font-semibold"></span></div>
+            <div class="">
+                <input type="text" class="border text-gray-900 p-2 w-96 focus:outline-none rounded-l" placeholder="Search for news..." x-model="query">
+                <button class="bg-blue-700 py-2.5 px-4 -ml-1 rounded-r" @click="getArticles()">Search</button>
+            </div>
+        </div>
+        
+        <!--Article-->
+        <div class="p-6 grid grid-cols-3 gap-12">
+            <template x-for="article in articles">
+                <div class="bg-gray-700 rounded-lg">
+                <a :href="article.url">
+                    <h2 class="text-xl font-semibold bg-gray-900 p-4 rounded-t" x-text="article.title"></h2>
+                    <div class="mt-2 font-light text-xs px-4">
+                        Written by <span x-text="article.author"></span> on <span x-text="article.source.name"></span> | <span x-text="article.publishedAt"></span>
+                    </div>
+                    <div class="p-4" x-text="article.description"></div>
+                    <img :src="article.urlToImage" class="rounded-b">
+                </a>
+                </div>
+            </template>
+        </div>
+    </div>
+    <script>
+        function data(){
+            return{
+                query: "",
+                articles: [],
+                topics: [
+                    "Sports", "Tech", "Code", "Phones", "Education"
+                ],
+                url: "https://newsapi.org/v2/everything?apiKey=3be0ae6a14c94ced9cfca4e22c1a6346",
+                getArticles: async function(){
+                    await fetch(this.url+`&q=${this.query}`)
+                        .then(response => response.json())
+                        .then(data => this.articles = data.articles);
+                },
+                sports(){
+                    query= "Sports";
+                },
+            };
+
+        }
+    </script>
+</body>
+</html>
